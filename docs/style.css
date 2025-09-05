@@ -265,6 +265,23 @@ h2 {
   margin-top: 20px;
 }
 
+.download-note h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.download-note ol {
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  padding-left: 20px;
+}
+
+.download-note li {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
 .download-note p {
   color: #666;
   margin: 0;
