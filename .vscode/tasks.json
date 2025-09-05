@@ -1,0 +1,33 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "launch emulator 2",
+            "type": "shell",
+            "command": "flutter emulators --launch pixel_5_-_api_33_clean",
+            "problemMatcher": []
+        },
+		{
+			"label": "launch on device",
+			"type": "shell",
+			"command": "flutter run --device-id 52c260bd",
+			"problemMatcher": []
+		},
+        {
+            "label": "launch emulator",
+            "type": "shell",
+            "command": "flutter emulators --launch pixel_5_-_api_33_clean",
+            "problemMatcher": []
+        },
+        {
+            "label": "flutter run",
+            "type": "shell",
+            "command": "flutter run",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

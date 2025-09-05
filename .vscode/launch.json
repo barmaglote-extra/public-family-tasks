@@ -1,0 +1,73 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Emulator and Hot Reload",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "deviceId": "emulator-5554",
+            "preLaunchTask": "launch emulator"
+        },
+        {
+            "name": "Launch Emulator and Run Mobile",
+            "type": "dart",
+            "request": "launch",
+            "preLaunchTask": "launch emulator",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Launch on Device",
+            "type": "dart",
+            "request": "launch",
+            "preLaunchTask": "launch on device",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "Launch on Device and Hot Reload",
+            "type": "dart",
+            "request": "launch",
+            "preLaunchTask": "launch on device",
+            "program": "lib/main.dart",
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Build and Install Release on Device",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "release",
+            "args": [
+                "--release"
+            ]
+        },
+        {
+            "name": "Mobile",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Launch Windows with Hot Reload",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "deviceId": "windows",
+            "flutterMode": "debug"
+        },
+        {
+            "name": "Mobile (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Mobile (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
