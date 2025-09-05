@@ -260,6 +260,16 @@ h2 {
   color: var(--dark-text);
 }
 
+.download-note {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-note p {
+  color: #666;
+  margin: 0;
+}
+
 footer {
   text-align: center;
   padding: 30px;
