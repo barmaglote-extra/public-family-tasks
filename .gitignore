@@ -10,6 +10,8 @@
 .qoder/
 /keystore/
 /keystore/familytasks-key.jks
+android/keystore/familytasks-key.jks
+/android/keystore/familytasks-key.jks
 
 
 # Flutter repo-specific
