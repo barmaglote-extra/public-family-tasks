@@ -1,7 +1,7 @@
 # Family Tasks - Task Management Application
 
 [![Platform Support](https://img.shields.io/badge/platform-android%20%7C%20ios%20%7C%20windows%20%7C%20macos%20%7C%20linux-blue)](#)
-[![License](https://img.shields.io/badge/license-MIT-green)](#)
+[![License](https://img.shields.io/badge/license-AGPL-green)](#)
 [![Flutter](https://img.shields.io/badge/flutter-3.6.2-blue)](#)
 
 Family Tasks is a comprehensive, cross-platform task management application built with Flutter. It allows users to organize their tasks into collections, set due dates, create recurring tasks, manage subtasks, and track their productivity with detailed statistics.
