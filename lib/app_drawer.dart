@@ -36,6 +36,13 @@ class AppDrawer extends StatelessWidget {
     }
   }
 
+  Future<void> _launchOfficialWebsiteUrl() async {
+    final Uri url = Uri.parse(AppConfig.officialWebSiteUrl);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   Color _getStatsColor(int total, int completed) {
     if (total == 0) {
       return Colors.transparent;
@@ -91,9 +98,11 @@ class AppDrawer extends StatelessWidget {
                   builder: (context, snapshot) {
                     Widget trailingWidget;
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      trailingWidget = Text(localizationService.translate('common.loading'), style: const TextStyle(fontSize: 12));
+                      trailingWidget =
+                          Text(localizationService.translate('common.loading'), style: const TextStyle(fontSize: 12));
                     } else if (snapshot.hasError) {
-                      trailingWidget = Text(localizationService.translate('common.error'), style: const TextStyle(fontSize: 12));
+                      trailingWidget =
+                          Text(localizationService.translate('common.error'), style: const TextStyle(fontSize: 12));
                     } else if (snapshot.hasData) {
                       final stats = snapshot.data!;
                       final total = stats['total']!;
@@ -130,9 +139,11 @@ class AppDrawer extends StatelessWidget {
                   builder: (context, snapshot) {
                     Widget trailingWidget;
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      trailingWidget = Text(localizationService.translate('common.loading'), style: const TextStyle(fontSize: 12));
+                      trailingWidget =
+                          Text(localizationService.translate('common.loading'), style: const TextStyle(fontSize: 12));
                     } else if (snapshot.hasError) {
-                      trailingWidget = Text(localizationService.translate('common.error'), style: const TextStyle(fontSize: 12));
+                      trailingWidget =
+                          Text(localizationService.translate('common.error'), style: const TextStyle(fontSize: 12));
                     } else if (snapshot.hasData) {
                       final stats = snapshot.data!;
                       final total = stats['total']!;
@@ -181,6 +192,26 @@ class AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushReplacementNamed(context, 'settings');
+                  },
+                ),
+                ListTile(
+                  title: Text(localizationService.translate('navigation.website')),
+                  dense: Platform.isAndroid,
+                  leading: const Icon(Icons.web),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    try {
+                      await _launchOfficialWebsiteUrl();
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Could not open donation link: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
                   },
                 ),
                 ListTile(
