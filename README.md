@@ -75,12 +75,12 @@ These collections are automatically created on first launch, providing a structu
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/barmaglote-extra/family-tasks.git
+   git clone https://github.com/barmaglote-extra/public-family-tasks.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd family-tasks
+   cd public-family-tasks
    ```
 
 3. Install dependencies:
