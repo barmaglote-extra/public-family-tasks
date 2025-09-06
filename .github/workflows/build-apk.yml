@@ -1,4 +1,4 @@
-name: Build Flutter APK
+name: build-flutter-apk
 
 on:
   workflow_dispatch:
