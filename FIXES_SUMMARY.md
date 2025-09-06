@@ -20,7 +20,7 @@
 
 - **gradle-wrapper.properties**: Updated Gradle version from 8.4 to 8.7
 - **settings.gradle**: Updated Android Gradle Plugin from 8.3.0 to 8.6.0 and Kotlin from 1.9.20 to 2.1.0
-- **app/build.gradle**: 
+- **app/build.gradle**:
   - Enhanced signing configuration with better fallback handling
   - Added automatic debug keystore generation task
   - Improved build variant configuration
