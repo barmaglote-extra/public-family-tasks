@@ -10,13 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="00b28f16-53cb-454f-9dac-6dcbcb20208d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/intl/de_DE.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/intl/de_DE.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/intl/en_US.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/intl/en_US.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/intl/es_ES.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/intl/es_ES.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/intl/fr_FR.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/intl/fr_FR.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/intl/ru_RU.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/intl/ru_RU.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/intl/uk_UA.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/intl/uk_UA.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,12 +63,15 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Temp/tasksapp/tasks.db",
-    "settings.editor.selected.configurable": "preferences.pathVariables",
+    "last_opened_file_path": "C:/Projects/Learning/Flutter/tasks/family-tasks",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "configurable.group.appearance",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
