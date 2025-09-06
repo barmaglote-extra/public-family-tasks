@@ -28,17 +28,11 @@ android {
 
     signingConfigs {
         release {
-            if (keystorePropertiesFile.exists()) {
+            if (keystorePropertiesFile.exists() && keystoreProperties.containsKey('storeFile')) {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
                 storeFile file(keystoreProperties['storeFile'])
                 storePassword keystoreProperties['storePassword']
-            } else {
-                // Use debug signing config if key.properties file doesn't exist
-                keyAlias 'androiddebugkey'
-                keyPassword 'android'
-                storeFile file(System.getenv("ANDROID_HOME") + '/debug.keystore')
-                storePassword 'android'
             }
         }
     }
@@ -57,12 +51,16 @@ android {
     buildTypes {
         debug {
             debuggable true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
             shrinkResources true
-            signingConfig = signingConfigs.release
+            if (keystorePropertiesFile.exists() && keystoreProperties.containsKey('storeFile')) {
+                signingConfig = signingConfigs.release
+            } else {
+                signingConfig = signingConfigs.debug
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
