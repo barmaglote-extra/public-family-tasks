@@ -12,7 +12,10 @@
 /keystore/familytasks-key.jks
 android/keystore/familytasks-key.jks
 /android/keystore/familytasks-key.jks
-
+/keystore/familytasks-key.jks.base64
+android/keystore/familytasks-key.jks.base64
+/android/keystore/familytasks-key.jks.base64
+familytasks-key.jks
 
 # Flutter repo-specific
 /bin/cache/
