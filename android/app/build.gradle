@@ -56,18 +56,19 @@ android {
                 // Handle both relative and absolute paths for storeFile
                 def storeFilePath = keystoreProperties['storeFile']
                 println "Store file path from properties: ${storeFilePath}"
+                def resolvedStoreFile
                 if (storeFilePath.startsWith('/')) {
-                    storeFile file(storeFilePath)
+                    resolvedStoreFile = file(storeFilePath)
                     println "Using absolute path for store file"
                 } else {
                     // Assume relative path is from the app directory
-                    storeFile file(storeFilePath)
-                    println "Using relative path for store file: ${file(storeFilePath).absolutePath}"
+                    resolvedStoreFile = file('./' + storeFilePath)
+                    println "Using relative path for store file: ${resolvedStoreFile.absolutePath}"
                 }
+                storeFile = resolvedStoreFile
                 storePassword keystoreProperties['storePassword']
                 
                 // Verify the store file exists
-                def resolvedStoreFile = storeFile
                 println "Resolved store file path: ${resolvedStoreFile.absolutePath}"
                 println "Store file exists: ${resolvedStoreFile.exists()}"
             } else {
@@ -75,13 +76,13 @@ android {
                 // Fallback to debug signing if keystore is not properly configured
                 keyAlias 'androiddebugkey'
                 keyPassword 'android'
-                storeFile file(System.getProperty('user.home') + '/.android/debug.keystore')
+                def debugStoreFile = file(System.getProperty('user.home') + '/.android/debug.keystore')
+                storeFile = debugStoreFile
                 storePassword 'android'
                 
                 // Verify the debug store file exists
-                def resolvedStoreFile = storeFile
-                println "Debug store file path: ${resolvedStoreFile.absolutePath}"
-                println "Debug store file exists: ${resolvedStoreFile.exists()}"
+                println "Debug store file path: ${debugStoreFile.absolutePath}"
+                println "Debug store file exists: ${debugStoreFile.exists()}"
             }
         }
     }
