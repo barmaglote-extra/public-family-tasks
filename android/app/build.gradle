@@ -32,7 +32,7 @@ android {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
                 // Use absolute path to ensure correct resolution
-                storeFile file('./familytasks-key.jks')
+                storeFile file('familytasks-key.jks')
                 storePassword keystoreProperties['storePassword']
             } else {
                 // Fallback to debug signing if keystore is not properly configured
