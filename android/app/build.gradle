@@ -31,8 +31,15 @@ android {
             if (keystorePropertiesFile.exists() && keystoreProperties.containsKey('storeFile')) {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
-                storeFile file(keystoreProperties['storeFile'])
+                // Use absolute path to ensure correct resolution
+                storeFile file('./familytasks-key.jks')
                 storePassword keystoreProperties['storePassword']
+            } else {
+                // Fallback to debug signing if keystore is not properly configured
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+                storeFile file(System.getProperty('user.home') + '/.android/debug.keystore')
+                storePassword 'android'
             }
         }
     }

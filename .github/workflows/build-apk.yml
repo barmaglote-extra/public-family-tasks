@@ -35,7 +35,7 @@ jobs:
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > ./android/app/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./android/app/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./android/app/key.properties
-          echo "storeFile=familytasks-key.jks" >> ./android/app/key.properties
+          echo "storeFile=./familytasks-key.jks" >> ./android/app/key.properties
 
       - name: Build release APK
         run: flutter build apk --release --no-shrink
