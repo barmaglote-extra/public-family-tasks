@@ -5,10 +5,30 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+// Look for key.properties in the app directory first, then fall back to root
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+def keystorePropertiesFile = file('key.properties')
+if (!keystorePropertiesFile.exists()) {
+    keystorePropertiesFile = rootProject.file('key.properties')
+}
+
+println "=== Gradle build script debugging ==="
+println "Looking for keystore properties file at: ${keystorePropertiesFile.absolutePath}"
+println "Keystore properties file exists: ${keystorePropertiesFile.exists()}"
+
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    println "Loaded keystore properties:"
+    keystoreProperties.each { key, value ->
+        // Don't print passwords
+        if (!key.contains("Password")) {
+            println "  ${key}: ${value}"
+        } else {
+            println "  ${key}: *****"
+        }
+    }
+} else {
+    println "No keystore properties file found, will use debug signing"
 }
 
 android {
@@ -28,18 +48,40 @@ android {
 
     signingConfigs {
         release {
+            println "=== Configuring release signing ==="
             if (keystorePropertiesFile.exists() && keystoreProperties.containsKey('storeFile')) {
+                println "Using release signing configuration"
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
-                // Use absolute path to ensure correct resolution
-                storeFile file('familytasks-key.jks')
+                // Handle both relative and absolute paths for storeFile
+                def storeFilePath = keystoreProperties['storeFile']
+                println "Store file path from properties: ${storeFilePath}"
+                if (storeFilePath.startsWith('/')) {
+                    storeFile file(storeFilePath)
+                    println "Using absolute path for store file"
+                } else {
+                    // Assume relative path is from the app directory
+                    storeFile file(storeFilePath)
+                    println "Using relative path for store file: ${file(storeFilePath).absolutePath}"
+                }
                 storePassword keystoreProperties['storePassword']
+                
+                // Verify the store file exists
+                def resolvedStoreFile = storeFile
+                println "Resolved store file path: ${resolvedStoreFile.absolutePath}"
+                println "Store file exists: ${resolvedStoreFile.exists()}"
             } else {
+                println "Using debug signing configuration as fallback"
                 // Fallback to debug signing if keystore is not properly configured
                 keyAlias 'androiddebugkey'
                 keyPassword 'android'
                 storeFile file(System.getProperty('user.home') + '/.android/debug.keystore')
                 storePassword 'android'
+                
+                // Verify the debug store file exists
+                def resolvedStoreFile = storeFile
+                println "Debug store file path: ${resolvedStoreFile.absolutePath}"
+                println "Debug store file exists: ${resolvedStoreFile.exists()}"
             }
         }
     }
@@ -61,13 +103,12 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
+            println "=== Configuring release build type ==="
             minifyEnabled true
             shrinkResources true
-            if (keystorePropertiesFile.exists() && keystoreProperties.containsKey('storeFile')) {
-                signingConfig = signingConfigs.release
-            } else {
-                signingConfig = signingConfigs.debug
-            }
+            // Always use release signing config for release builds
+            signingConfig signingConfigs.release
+            println "Release signing config assigned"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
