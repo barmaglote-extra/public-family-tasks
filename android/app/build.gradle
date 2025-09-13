@@ -61,8 +61,8 @@ android {
                     resolvedStoreFile = file(storeFilePath)
                     println "Using absolute path for store file"
                 } else {
-                    // Assume relative path is from the app directory
-                    resolvedStoreFile = file('./' + storeFilePath)
+                    // For relative paths, resolve from the android directory
+                    resolvedStoreFile = file("../" + storeFilePath)
                     println "Using relative path for store file: ${resolvedStoreFile.absolutePath}"
                 }
                 storeFile = resolvedStoreFile
