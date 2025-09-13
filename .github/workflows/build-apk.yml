@@ -41,17 +41,11 @@ jobs:
         run: flutter build apk --release --no-shrink
 
       - name: Build release AAB
+        run: flutter build appbundle --release --no-shrink
+
+      - name: Verify AAB release signing
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > ./android/app/familytasks-key.jks
-          chmod 600 ./android/app/familytasks-key.jks
-
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > ./android/app/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./android/app/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./android/app/key.properties
-          echo "storeFile=familytasks-key.jks" >> ./android/app/key.properties
-
-          flutter pub get
-          flutter build appbundle --release --no-shrink
+          jarsigner -verify -verbose -certs build/app/outputs/bundle/release/app-release.aab
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
