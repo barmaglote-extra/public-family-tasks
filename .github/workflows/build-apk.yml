@@ -28,91 +28,31 @@ jobs:
 
       - name: Restore keystore
         run: |
-          echo "Restoring keystore from secrets..."
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > ./android/app/familytasks-key.jks
           chmod 600 ./android/app/familytasks-key.jks
-          echo "Keystore restored to ./android/app/familytasks-key.jks"
 
       - name: Create key.properties
         run: |
-          echo "Creating key.properties file..."
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > ./android/app/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./android/app/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./android/app/key.properties
-          echo "storeFile=familytasks-key.jks" >> ./android/app/key.properties
-          echo "key.properties created successfully"
+          echo "storeFile=${{ github.workspace }}/android/app/familytasks-key.jks" >> ./android/app/key.properties
 
-      - name: Verify keystore setup
+      - name: Verify signing config
         run: |
-          echo "=== Verifying keystore setup ==="
-          echo "Current directory: $(pwd)"
-          echo "Android directory contents:"
-          ls -la ./android/
-          echo "Android app directory contents:"
-          ls -la ./android/app/
-          echo "Key properties file exists: $(test -f ./android/key.properties && echo 'Yes' || echo 'No')"
-          if [ -f ./android/key.properties ]; then
-            echo "Key properties content:"
-            cat ./android/key.properties
-          fi
-          echo "Keystore file exists: $(test -f ./android/app/familytasks-key.jks && echo 'Yes' || echo 'No')"
-          if [ -f ./android/app/familytasks-key.jks ]; then
-            echo "Keystore file size: $(stat -c%s ./android/app/familytasks-key.jks) bytes"
-          fi
-
-      - name: Debug Gradle properties
-        run: |
-          echo "=== Debugging Gradle properties ==="
           cd android
-          echo "Gradle properties:"
-          if [ -f gradle.properties ]; then
-            cat gradle.properties
-          else
-            echo "No gradle.properties file found"
-          fi
-          echo "Project structure:"
-          find . -name "*.gradle" -o -name "key.properties" | head -20
+          ./gradlew signingReport
 
       - name: Build release APK
-        run: |
-          echo "=== Building release APK ==="
-          flutter build apk --release --no-shrink --verbose
+        run: flutter build apk --release --no-shrink
 
       - name: Build release AAB
-        run: |
-          echo "=== Building release AAB ==="
-          flutter build appbundle --release --no-shrink --verbose
+        run: flutter build appbundle --release --no-shrink
 
       - name: Verify AAB release signing
         run: |
-          echo "=== Verifying AAB release signing ==="
           cd build/app/outputs/bundle/release
-          echo "AAB file exists: $(test -f app-release.aab && echo 'Yes' || echo 'No')"
-          if [ -f app-release.aab ]; then
-            echo "AAB file size: $(stat -c%s app-release.aab) bytes"
-            jarsigner -verify -verbose -certs app-release.aab
-          else
-            echo "ERROR: AAB file not found!"
-            ls -la
-          fi
-
-      - name: Debug signing info
-        run: |
-          echo "=== Debug signing info ==="
-          echo "Keystore properties file exists: $(test -f ./android/key.properties && echo 'Yes' || echo 'No')"
-          if [ -f ./android/key.properties ]; then
-            echo "Key properties content:"
-            cat ./android/key.properties
-          fi
-          echo "Keystore file exists: $(test -f ./android/app/familytasks-key.jks && echo 'Yes' || echo 'No')"
-
-          # Check if Gradle can read the properties
-          echo "Testing Gradle signing config..."
-          cd android
-          if [ -f key.properties ]; then
-            echo "Gradle would use these signing properties:"
-            grep -v "Password" key.properties || echo "No non-password properties found"
-          fi
+          jarsigner -verify -verbose -certs app-release.aab
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
