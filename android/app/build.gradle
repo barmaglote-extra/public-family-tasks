@@ -67,7 +67,7 @@ android {
                 }
                 storeFile = resolvedStoreFile
                 storePassword keystoreProperties['storePassword']
-                
+
                 // Verify the store file exists
                 println "Resolved store file path: ${resolvedStoreFile.absolutePath}"
                 println "Store file exists: ${resolvedStoreFile.exists()}"
@@ -79,7 +79,7 @@ android {
                 def debugStoreFile = file(System.getProperty('user.home') + '/.android/debug.keystore')
                 storeFile = debugStoreFile
                 storePassword 'android'
-                
+
                 // Verify the debug store file exists
                 println "Debug store file path: ${debugStoreFile.absolutePath}"
                 println "Debug store file exists: ${debugStoreFile.exists()}"

@@ -35,10 +35,10 @@ jobs:
       - name: Create key.properties
         run: |
           echo "Creating key.properties file..."
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > ./android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./android/key.properties
-          echo "storeFile=app/familytasks-key.jks" >> ./android/key.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > ./android/app/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./android/app/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./android/app/key.properties
+          echo "storeFile=familytasks-key.jks" >> ./android/app/key.properties
           echo "key.properties created successfully"
 
       - name: Verify keystore setup
@@ -104,7 +104,7 @@ jobs:
             cat ./android/key.properties
           fi
           echo "Keystore file exists: $(test -f ./android/app/familytasks-key.jks && echo 'Yes' || echo 'No')"
-          
+
           # Check if Gradle can read the properties
           echo "Testing Gradle signing config..."
           cd android
