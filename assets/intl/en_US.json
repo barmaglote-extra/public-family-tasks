@@ -41,6 +41,7 @@
     "task_name": "Task Name",
     "task_description": "Task Description",
     "due_date": "Due Date",
+    "due": "Due Date",
     "priority": "Priority",
     "urgent": "Urgent",
     "normal": "Normal",

@@ -41,6 +41,7 @@
     "task_name": "Aufgabenname",
     "task_description": "Aufgabenbeschreibung",
     "due_date": "Fälligkeitsdatum",
+    "due": "Fälligkeitsdatum",
     "priority": "Priorität",
     "urgent": "Dringend",
     "normal": "Normal",

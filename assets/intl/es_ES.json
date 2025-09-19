@@ -41,6 +41,7 @@
     "task_name": "Nombre de la Tarea",
     "task_description": "Descripción de la Tarea",
     "due_date": "Fecha Límite",
+    "due": "Fecha Límite",
     "priority": "Prioridad",
     "urgent": "Urgente",
     "normal": "Normal",

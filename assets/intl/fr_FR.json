@@ -41,6 +41,7 @@
     "task_name": "Nom de la Tâche",
     "task_description": "Description de la Tâche",
     "due_date": "Date d'Échéance",
+    "due": "Date d'Échéance",
     "priority": "Priorité",
     "urgent": "Urgent",
     "normal": "Normal",
