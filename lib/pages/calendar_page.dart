@@ -113,15 +113,20 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
     });
   }
 
-  void _onTaskStateChanged(bool? value, int? taskId) {
-    if (taskId != null && value != null) {
-      _tasksService.updateItemById(taskId, {'is_completed': value ? 1 : 0}).then((_) {
-        setState(() {
-          _updateTasksFuture(_selectedDay!);
-          _updateTaskCountFuture(_focusedDay);
-        });
-      });
+  void _onTaskStateChanged(bool? value, int? taskId) async {
+    if (taskId == null || value == null) return;
+
+    if (value) {
+      await _tasksService.markTaskAsCompleted(taskId);
+    } else {
+      await _tasksService.markTaskAsNotCompleted(taskId);
     }
+
+    if (!mounted) return;
+    setState(() {
+      _updateTasksFuture(_selectedDay!);
+      _updateTaskCountFuture(_focusedDay);
+    });
   }
 
   Widget _buildDayContent(DateTime day, int taskCount, int taskCompleted,
