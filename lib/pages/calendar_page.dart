@@ -25,7 +25,7 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   late Future<List<Todo>> _tasksFuture;
-  late Future<Map<DateTime, int>> _taskCountFuture;
+  late Future<Map<DateTime, ({int total, int completed})>> _taskCountFuture;
   late Future<Map<String, int>> _dueDateTasksStatsFuture;
   late Future<Map<String, int>> _recurringTasksStatsFuture;
   final _dueDateTasksService = locator<DueDateTasksService>();
@@ -124,7 +124,8 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
     }
   }
 
-  Widget _buildDayContent(DateTime day, int taskCount, {bool isToday = false, bool isSelected = false}) {
+  Widget _buildDayContent(DateTime day, int taskCount, int taskCompleted,
+      {bool isToday = false, bool isSelected = false}) {
     final isWeekend = day.weekday == DateTime.saturday || day.weekday == DateTime.sunday;
     return Container(
       decoration: BoxDecoration(
@@ -157,8 +158,12 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
               child: Container(
                 width: 16,
                 height: 16,
-                decoration: const BoxDecoration(
-                  color: Colors.pink,
+                decoration: BoxDecoration(
+                  color: (taskCompleted == 0
+                      ? Colors.pink
+                      : taskCompleted < taskCount
+                          ? Colors.amber
+                          : Colors.green),
                   shape: BoxShape.rectangle,
                 ),
                 child: Center(
@@ -364,10 +369,10 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
           padding: const EdgeInsets.all(12.0),
           child: Column(
             children: [
-              FutureBuilder<Map<DateTime, int>>(
+              FutureBuilder<Map<DateTime, ({int total, int completed})>>(
                 future: _taskCountFuture,
                 builder: (context, snapshot) {
-                  Map<DateTime, int> taskCountMap = snapshot.data ?? {};
+                  final taskCountMap = snapshot.data ?? <DateTime, ({int total, int completed})>{};
                   return TableCalendar(
                     firstDay: DateTime.utc(2020, 1, 1),
                     lastDay: DateTime.utc(2030, 12, 31),
@@ -392,16 +397,19 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
                     ),
                     calendarBuilders: CalendarBuilders(
                       defaultBuilder: (context, day, focusedDay) {
-                        final taskCount = taskCountMap[DateTime(day.year, day.month, day.day)] ?? 0;
-                        return _buildDayContent(day, taskCount);
+                        final taskCount = taskCountMap[DateTime(day.year, day.month, day.day)]?.total ?? 0;
+                        final taskCompleted = taskCountMap[DateTime(day.year, day.month, day.day)]?.completed ?? 0;
+                        return _buildDayContent(day, taskCount, taskCompleted);
                       },
                       todayBuilder: (context, day, focusedDay) {
-                        final taskCount = taskCountMap[DateTime(day.year, day.month, day.day)] ?? 0;
-                        return _buildDayContent(day, taskCount, isToday: true);
+                        final taskCount = taskCountMap[DateTime(day.year, day.month, day.day)]?.total ?? 0;
+                        final taskCompleted = taskCountMap[DateTime(day.year, day.month, day.day)]?.completed ?? 0;
+                        return _buildDayContent(day, taskCount, taskCompleted, isToday: true);
                       },
                       selectedBuilder: (context, day, focusedDay) {
-                        final taskCount = taskCountMap[DateTime(day.year, day.month, day.day)] ?? 0;
-                        return _buildDayContent(day, taskCount, isSelected: true);
+                        final taskCount = taskCountMap[DateTime(day.year, day.month, day.day)]?.total ?? 0;
+                        final taskCompleted = taskCountMap[DateTime(day.year, day.month, day.day)]?.completed ?? 0;
+                        return _buildDayContent(day, taskCount, taskCompleted, isSelected: true);
                       },
                     ),
                   );

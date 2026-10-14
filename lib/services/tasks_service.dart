@@ -192,7 +192,8 @@ class TasksService {
     return result?.length ?? 0;
   }
 
-  Future<Map<DateTime, int>> getRegularTasksCountByDateRange(DateTime start, DateTime end) async {
+  Future<Map<DateTime, ({int total, int completed})>> getRegularTasksCountByDateRange(
+      DateTime start, DateTime end) async {
     final startString = DateTime(start.year, start.month, start.day).millisecondsSinceEpoch.toString();
     final endString = DateTime(end.year, end.month, end.day).millisecondsSinceEpoch.toString();
 
@@ -204,13 +205,18 @@ class TasksService {
     );
 
     final tasks = result ?? [];
-    final taskCountMap = <DateTime, int>{};
+    final taskCountMap = <DateTime, ({int total, int completed})>{};
 
     for (var task in tasks) {
-      final dueDate = (task as TodoRegular).dueDate;
+      final todo = task as TodoRegular;
+      final dueDate = todo.dueDate;
       if (dueDate != null) {
         final normalizedDate = DateTime(dueDate.year, dueDate.month, dueDate.day);
-        taskCountMap[normalizedDate] = (taskCountMap[normalizedDate] ?? 0) + 1;
+        final current = taskCountMap[normalizedDate] ?? (total: 0, completed: 0);
+        taskCountMap[normalizedDate] = (
+          total: current.total + 1,
+          completed: current.completed + (todo.isCompleted ? 1 : 0),
+        );
       }
     }
 
