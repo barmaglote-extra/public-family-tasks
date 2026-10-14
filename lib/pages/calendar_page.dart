@@ -53,10 +53,7 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
     );
 
     if (result == true) {
-      setState(() {
-        _updateTasksFuture(_selectedDay!);
-        _updateTaskCountFuture(_focusedDay);
-      });
+      _refreshAll();
     }
   }
 
@@ -77,40 +74,27 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
     _taskCountFuture = _tasksService.getRegularTasksCountByDateRange(firstDayOfMonth, lastDayOfMonth);
   }
 
-  void _updateTasksFuture(DateTime selectedDay) {
-    _tasksFuture = _tasksService.getRegularTasksByDate(selectedDay);
-  }
-
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    setState(() {
-      _selectedDay = selectedDay;
-      _focusedDay = focusedDay;
-      _updateTasksFuture(selectedDay);
-      _updateTaskCountFuture(focusedDay);
-    });
+    _selectedDay = selectedDay;
+    _focusedDay = focusedDay;
+    _refreshAll();
   }
 
   void _onPageChanged(DateTime focusedDay) {
-    setState(() {
-      _focusedDay = focusedDay;
-      if (_selectedDay == null || _selectedDay!.month != focusedDay.month || _selectedDay!.year != focusedDay.year) {
-        _selectedDay = DateTime(focusedDay.year, focusedDay.month, 1);
-      }
-      _updateTasksFuture(_selectedDay!);
-      _updateTaskCountFuture(focusedDay);
-    });
+    _focusedDay = focusedDay;
+    if (_selectedDay == null || _selectedDay!.month != focusedDay.month || _selectedDay!.year != focusedDay.year) {
+      _selectedDay = DateTime(focusedDay.year, focusedDay.month, 1);
+    }
+    _refreshAll();
   }
 
   void _navigateToTaskPage(int taskId) async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TaskPage(title: "Task", taskId: taskId)),
-    ).then((_) {
-      setState(() {
-        _updateTasksFuture(_selectedDay!);
-        _updateTaskCountFuture(_focusedDay);
-      });
-    });
+    );
+    if (!mounted) return;
+    _refreshAll();
   }
 
   void _onTaskStateChanged(bool? value, int? taskId) async {
@@ -123,9 +107,15 @@ class _CalendarPageState extends State<CalendarPage> with NavigationMixin, BackB
     }
 
     if (!mounted) return;
+    _refreshAll();
+  }
+
+  void _refreshAll() {
     setState(() {
-      _updateTasksFuture(_selectedDay!);
+      _tasksFuture = _tasksService.getRegularTasksByDate(_selectedDay!);
       _updateTaskCountFuture(_focusedDay);
+      _dueDateTasksStatsFuture = _dueDateTasksService.getDueDateTasksStats();
+      _recurringTasksStatsFuture = _recurringTasksService.getTodayRecurringTasksStats();
     });
   }
 
