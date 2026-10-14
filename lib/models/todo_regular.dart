@@ -11,6 +11,7 @@ class TodoRegular extends Todo {
     required super.isCompleted,
     required super.collectionId,
     required super.description,
+    required super.comments,
     required super.taskType,
     required super.urgency,
     required this.dueDate,
@@ -23,6 +24,7 @@ class TodoRegular extends Todo {
       name: map[TodoFields.name],
       isCompleted: map[TodoFields.isCompleted] == 1,
       description: map[TodoFields.description],
+      comments: map[TodoFields.comments],
       taskType: map[TodoFields.taskType],
       urgency: map[TodoFields.urgency],
       dueDate: map[TodoFields.dueDate] != null ? DateTime.fromMillisecondsSinceEpoch(map[TodoFields.dueDate]) : null,
@@ -38,6 +40,7 @@ class TodoRegular extends Todo {
       TodoFields.taskType: 'regular',
       TodoFields.collectionId: collectionId,
       TodoFields.description: description,
+      TodoFields.comments: comments,
       TodoFields.urgency: urgency,
       TodoFields.dueDate: dueDate?.millisecondsSinceEpoch,
     };
@@ -51,6 +54,7 @@ class TodoRegular extends Todo {
       recurrenceRule: '',
       isCompleted: isCompleted ? 1 : 0,
       description: description,
+      comments: comments,
       urgency: urgency,
       dueDate: dueDate?.millisecondsSinceEpoch,
     );

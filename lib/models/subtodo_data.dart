@@ -4,6 +4,7 @@ class SubTodoData {
   final String name;
   final int taskId;
   final String? description;
+  final String? comments;
   final int isCompleted;
   final int? urgency;
   final int? dueDate;
@@ -14,6 +15,7 @@ class SubTodoData {
       required this.taskId,
       required this.isCompleted,
       required this.description,
+      required this.comments,
       required this.urgency,
       required this.dueDate,
       this.orderIndex = 0});
@@ -24,6 +26,7 @@ class SubTodoData {
       SubtaskFields.taskId: taskId,
       SubtaskFields.isCompleted: isCompleted,
       SubtaskFields.description: description,
+      SubtaskFields.comments: comments,
       SubtaskFields.urgency: urgency,
       SubtaskFields.dueDate: dueDate,
       SubtaskFields.orderIndex: orderIndex,

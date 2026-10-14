@@ -12,6 +12,7 @@ class TodoRecurrent extends Todo {
       required this.recurrenceInterval,
       required super.collectionId,
       required super.description,
+      required super.comments,
       required super.taskType,
       required super.urgency});
 
@@ -23,6 +24,7 @@ class TodoRecurrent extends Todo {
         recurrenceInterval: map[TodoFields.recurrenceRule],
         collectionId: map[TodoFields.collectionId],
         description: map[TodoFields.description],
+        comments: map[TodoFields.comments],
         taskType: map[TodoFields.taskType],
         urgency: map[TodoFields.urgency] ?? 0);
   }
@@ -37,6 +39,7 @@ class TodoRecurrent extends Todo {
       TodoFields.taskType: 'recurrent',
       TodoFields.collectionId: collectionId,
       TodoFields.description: description,
+      TodoFields.comments: comments,
       TodoFields.urgency: urgency
     };
   }
@@ -49,6 +52,7 @@ class TodoRecurrent extends Todo {
         recurrenceRule: recurrenceInterval ?? '',
         isCompleted: isCompleted ? 1 : 0,
         description: description,
+        comments: comments,
         urgency: urgency,
         dueDate: null);
   }

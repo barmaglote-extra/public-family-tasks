@@ -8,7 +8,6 @@ import 'package:tasks/models/subtodo.dart';
 import 'package:tasks/models/task_notification.dart';
 import 'package:tasks/models/todo.dart';
 import 'package:tasks/models/todo_collection.dart';
-import 'package:tasks/models/todo_fields.dart';
 import 'package:tasks/pages/add_notification_page.dart';
 import 'package:tasks/services/collections_service.dart';
 import 'package:tasks/services/localization_service.dart';
@@ -18,6 +17,7 @@ import 'package:tasks/services/tasks_service.dart';
 import 'package:tasks/services/update_provider.dart';
 import 'package:tasks/widgets/date_picker_field.dart';
 import 'package:tasks/widgets/localized_text.dart';
+import 'package:tasks/widgets/task_comments_field.dart';
 import 'package:tasks/widgets/task_description_field.dart';
 import 'package:tasks/widgets/task_name_field.dart';
 import 'package:tasks/widgets/urgency_dropdown.dart';
@@ -47,6 +47,7 @@ class _SubTasksPageState extends State<SubTaskPage> {
   String? repeatPeriod;
   final TextEditingController _nameFieldController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _commentsController = TextEditingController();
   final TextEditingController _dueDateController = TextEditingController();
   var _notifications = List<TaskNotification>.empty();
 
@@ -148,10 +149,11 @@ class _SubTasksPageState extends State<SubTaskPage> {
       }
 
       widget._subTasksService.updateItemById(subTask!.id, {
-        TodoFields.name: _nameFieldController.text,
-        TodoFields.description: _descriptionController.text,
-        TodoFields.urgency: urgency,
-        TodoFields.dueDate: DateTime.tryParse(_dueDateController.value.text)?.millisecondsSinceEpoch
+        SubtaskFields.name: _nameFieldController.text,
+        SubtaskFields.description: _descriptionController.text,
+        SubtaskFields.comments: _commentsController.text,
+        SubtaskFields.urgency: urgency,
+        SubtaskFields.dueDate: DateTime.tryParse(_dueDateController.value.text)?.millisecondsSinceEpoch
       });
       widget._updateProvider.notifyListeners();
       setState(() {
@@ -162,6 +164,7 @@ class _SubTasksPageState extends State<SubTaskPage> {
       setState(() {
         _nameFieldController.text = subTask!.name;
         _descriptionController.text = subTask!.description ?? '';
+        _commentsController.text = subTask!.comments ?? '';
         _dueDateController.text = subTask!.dueDate != null ? DateFormat('dd.MM.yyyy').format(subTask!.dueDate!) : '';
         _isEditMode = true;
       });
@@ -204,6 +207,15 @@ class _SubTasksPageState extends State<SubTaskPage> {
     } else {
       return Colors.grey.shade300; // Future
     }
+  }
+
+  @override
+  void dispose() {
+    _nameFieldController.dispose();
+    _descriptionController.dispose();
+    _commentsController.dispose();
+    _dueDateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -284,6 +296,10 @@ class _SubTasksPageState extends State<SubTaskPage> {
                               const Text("Description",
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
                               TaskDescriptionField(controller: _descriptionController),
+                              const SizedBox(height: 10),
+                              const Text("Comments",
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                              TaskCommentsField(controller: _commentsController),
                               const SizedBox(height: 10),
                               const Text("Importance",
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
@@ -384,6 +400,19 @@ class _SubTasksPageState extends State<SubTaskPage> {
                                 ),
                                 Text(subTask?.description ?? context.tr('common.no_data'),
                                     style: const TextStyle(fontSize: 14)),
+                                if (subTask?.comments != null && subTask!.comments!.isNotEmpty) ...[
+                                  const SizedBox(height: 10),
+                                  Consumer<LocalizationService>(
+                                    builder: (context, localizationService, child) {
+                                      return Text(
+                                        localizationService.translate('task_details.comments'),
+                                        style: const TextStyle(
+                                            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                                      );
+                                    },
+                                  ),
+                                  Text(subTask!.comments!, style: const TextStyle(fontSize: 14)),
+                                ],
                                 const SizedBox(height: 10),
                                 Consumer<LocalizationService>(
                                   builder: (context, localizationService, child) {

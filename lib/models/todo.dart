@@ -8,6 +8,7 @@ abstract class Todo {
   final bool isCompleted;
   final int collectionId;
   final String? description;
+  final String? comments;
   final String? taskType;
   final int? urgency;
 
@@ -17,6 +18,7 @@ abstract class Todo {
       required this.isCompleted,
       required this.collectionId,
       required this.description,
+      required this.comments,
       required this.taskType,
       required this.urgency});
 

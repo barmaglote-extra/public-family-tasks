@@ -6,6 +6,7 @@ class TodoData {
   final String taskType;
   final String recurrenceRule;
   final String? description;
+  final String? comments;
   final int isCompleted;
   final int? urgency;
   final int? dueDate;
@@ -17,6 +18,7 @@ class TodoData {
       required this.recurrenceRule,
       required this.isCompleted,
       required this.description,
+      required this.comments,
       required this.urgency,
       required this.dueDate});
 
@@ -28,6 +30,7 @@ class TodoData {
       TodoFields.recurrenceRule: recurrenceRule,
       TodoFields.isCompleted: isCompleted,
       TodoFields.description: description,
+      TodoFields.comments: comments,
       TodoFields.urgency: urgency,
       TodoFields.dueDate: dueDate
     };

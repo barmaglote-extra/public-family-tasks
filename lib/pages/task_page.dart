@@ -24,6 +24,7 @@ import 'package:tasks/widgets/collection_dropdown.dart';
 import 'package:tasks/widgets/date_picker_field.dart';
 import 'package:tasks/widgets/recurrent_task_info_widget.dart';
 import 'package:tasks/widgets/repeat_period_dropdown.dart';
+import 'package:tasks/widgets/task_comments_field.dart';
 import 'package:tasks/widgets/task_description_field.dart';
 import 'package:tasks/widgets/task_name_field.dart';
 import 'package:tasks/widgets/urgency_dropdown.dart';
@@ -57,6 +58,7 @@ class _TasksPageState extends State<TaskPage> {
   String? repeatPeriod;
   final TextEditingController _nameFieldController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _commentsController = TextEditingController();
   final TextEditingController _dueDateController = TextEditingController();
   var _notifications = List<TaskNotification>.empty();
   List<SubTodo> _subTasks = [];
@@ -249,6 +251,7 @@ class _TasksPageState extends State<TaskPage> {
             taskId: _subTasks[subTaskIndex].taskId,
             isCompleted: _subTasks[subTaskIndex].isCompleted,
             description: _subTasks[subTaskIndex].description,
+            comments: _subTasks[subTaskIndex].comments,
             urgency: _subTasks[subTaskIndex].urgency,
             dueDate: _subTasks[subTaskIndex].dueDate,
             orderIndex: i,
@@ -309,6 +312,7 @@ class _TasksPageState extends State<TaskPage> {
       await widget._tasksService.updateItemById(task!.id, {
         TodoFields.name: _nameFieldController.text,
         TodoFields.description: _descriptionController.text,
+        TodoFields.comments: _commentsController.text,
         TodoFields.urgency: urgency,
         TodoFields.recurrenceRule: repeatPeriod,
         TodoFields.collectionId: selectedCollection!.id,
@@ -337,6 +341,7 @@ class _TasksPageState extends State<TaskPage> {
                 isCompleted: 0,
                 dueDate: null,
                 description: '',
+                comments: '',
                 urgency: null,
                 orderIndex: i,
               );
@@ -381,6 +386,7 @@ class _TasksPageState extends State<TaskPage> {
       setState(() {
         _nameFieldController.text = task!.name;
         _descriptionController.text = task!.description ?? '';
+        _commentsController.text = task!.comments ?? '';
         repeatPeriod = task?.taskType == 'recurrent' ? ((task as TodoRecurrent).recurrenceInterval ?? 'weekly') : '';
         if (task?.taskType == 'regular') {
           _dueDateController.text = (task as TodoRegular).dueDate != null
@@ -470,6 +476,7 @@ class _TasksPageState extends State<TaskPage> {
   void dispose() {
     _nameFieldController.dispose();
     _descriptionController.dispose();
+    _commentsController.dispose();
     _dueDateController.dispose();
     for (var subTask in subTaskControllers) {
       (subTask['name'] as TextEditingController?)?.dispose();
@@ -601,6 +608,16 @@ class _TasksPageState extends State<TaskPage> {
                           },
                         ),
                         TaskDescriptionField(controller: _descriptionController),
+                        const SizedBox(height: 10),
+                        Consumer<LocalizationService>(
+                          builder: (context, localizationService, child) {
+                            return Text(
+                              localizationService.translate('task_details.comments'),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                            );
+                          },
+                        ),
+                        TaskCommentsField(controller: _commentsController),
                         const SizedBox(height: 10),
                         Consumer<LocalizationService>(
                           builder: (context, localizationService, child) {
@@ -858,6 +875,19 @@ class _TasksPageState extends State<TaskPage> {
                             },
                           ),
                           Text(task?.description ?? 'Missing', style: const TextStyle(fontSize: 14)),
+                          if (task?.comments != null && task!.comments!.isNotEmpty) ...[
+                            const SizedBox(height: 10),
+                            Consumer<LocalizationService>(
+                              builder: (context, localizationService, child) {
+                                return Text(
+                                  localizationService.translate('task_details.comments'),
+                                  style: const TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                                );
+                              },
+                            ),
+                            Text(task!.comments!, style: const TextStyle(fontSize: 14)),
+                          ],
                           const SizedBox(height: 10),
                           Consumer<LocalizationService>(
                             builder: (context, localizationService, child) {

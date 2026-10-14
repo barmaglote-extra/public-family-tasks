@@ -78,7 +78,7 @@ void main() async {
   await locator<LocalizationService>().loadLanguage();
   await locator<TasksService>().initTotalCompletedCounter();
   await locator<SubTasksService>().initializeOrderIndexes();
-  
+
   // Initialize default collections
   final collectionsService = locator<CollectionsService>();
   await DefaultCollectionsService.initializeDefaultCollections(collectionsService);

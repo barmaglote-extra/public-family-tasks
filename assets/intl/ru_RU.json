@@ -236,6 +236,7 @@
     "collection": "Коллекция",
     "title": "Название",
     "description": "Описание",
+    "comments": "Комментарии",
     "type": "Тип",
     "importance": "Важность",
     "frequency": "Частота",

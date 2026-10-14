@@ -17,6 +17,7 @@ class SubTodo extends Todo {
       required super.name,
       required super.isCompleted,
       required super.description,
+      required super.comments,
       required super.urgency});
 
   @override
@@ -27,6 +28,7 @@ class SubTodo extends Todo {
       SubtaskFields.isCompleted: isCompleted,
       SubtaskFields.taskId: taskId,
       SubtaskFields.description: description,
+      SubtaskFields.comments: comments,
       SubtaskFields.urgency: urgency,
       SubtaskFields.dueDate: dueDate?.millisecondsSinceEpoch,
       SubtaskFields.orderIndex: orderIndex,
@@ -39,6 +41,7 @@ class SubTodo extends Todo {
       taskId: taskId,
       isCompleted: isCompleted ? 1 : 0,
       description: description,
+      comments: comments,
       urgency: urgency,
       dueDate: dueDate?.millisecondsSinceEpoch,
       orderIndex: orderIndex,
@@ -52,6 +55,7 @@ class SubTodo extends Todo {
       name: map[SubtaskFields.name],
       isCompleted: map[SubtaskFields.isCompleted] == 1,
       description: map[SubtaskFields.description],
+      comments: map[SubtaskFields.comments],
       urgency: map[SubtaskFields.urgency],
       dueDate:
           map[SubtaskFields.dueDate] != null ? DateTime.fromMillisecondsSinceEpoch(map[SubtaskFields.dueDate]) : null,

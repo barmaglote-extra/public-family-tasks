@@ -725,7 +725,7 @@ class _TasksDueDatePageState extends State<TasksDueDatePage>
               ),
               // Subtask expansion strip
               if (subTasks.isNotEmpty)
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Material(
                     color: Colors.grey.shade100,

@@ -40,7 +40,7 @@ class SQLLiteDB {
 
     return await openDatabase(
       path,
-      version: 12,
+      version: 14,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -264,6 +264,28 @@ class SQLLiteDB {
       } catch (e) {
         if (kDebugMode) {
           print('template_subtasks table already exists, skipping creation: $e');
+        }
+      }
+    }
+
+    // Add field comments to tasks
+    if (oldVersion < 13) {
+      try {
+        await db.execute('ALTER TABLE tasks ADD COLUMN comments TEXT');
+      } catch (e) {
+        if (kDebugMode) {
+          print('comments column already exists in tasks table, skipping...');
+        }
+      }
+    }
+
+    // Add field comments to subtasks
+    if (oldVersion < 14) {
+      try {
+        await db.execute('ALTER TABLE subtasks ADD COLUMN comments TEXT');
+      } catch (e) {
+        if (kDebugMode) {
+          print('comments column already exists in subtasks table, skipping...');
         }
       }
     }

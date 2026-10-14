@@ -45,6 +45,7 @@ class NewTaskPage extends StatefulWidget {
 class _NewTasksPageState extends State<NewTaskPage> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _commentsController = TextEditingController();
   final TextEditingController _dueDateController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   ToDoCollection? collection;
@@ -100,6 +101,7 @@ class _NewTasksPageState extends State<NewTaskPage> {
       recurrenceRule: repeatPeriod ?? '',
       isCompleted: 0,
       description: _descriptionController.text,
+      comments: _commentsController.text,
       urgency: urgency ?? 0,
       dueDate: DateTime.tryParse(_dueDateController.value.text)?.millisecondsSinceEpoch,
     );
@@ -125,6 +127,7 @@ class _NewTasksPageState extends State<NewTaskPage> {
           isCompleted: 0,
           dueDate: DateTime.tryParse(subTask['dueDate']!.text)?.millisecondsSinceEpoch,
           description: '',
+          comments: '',
           urgency: null,
           orderIndex: i,
         );

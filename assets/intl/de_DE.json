@@ -236,6 +236,7 @@
     "collection": "Sammlung",
     "title": "Titel",
     "description": "Beschreibung",
+    "comments": "Kommentar",
     "type": "Typ",
     "importance": "Wichtigkeit",
     "frequency": "Häufigkeit",

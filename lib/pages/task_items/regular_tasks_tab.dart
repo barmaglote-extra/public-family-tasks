@@ -409,7 +409,7 @@ class _RegularTasksTabState extends State<RegularTasksTab> {
               ),
               // Subtask expansion strip
               if (subTasks.isNotEmpty)
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Material(
                     color: Colors.transparent,

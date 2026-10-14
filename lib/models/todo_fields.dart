@@ -6,6 +6,7 @@ class TodoFields {
   static const String taskType = "task_type";
   static const String recurrenceRule = "recurrence_rule";
   static const String description = "description";
+  static const String comments = "comments";
   static const String urgency = "urgency";
   static const String dueDate = "due_date";
 }
