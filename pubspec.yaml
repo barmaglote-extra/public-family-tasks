@@ -104,7 +104,6 @@ flutter:
     - assets/intl/fr_FR.json
     - assets/intl/symbols/en_US.json
     - assets/nokia.mp3
-    - shaders/ink_sparkle.frag
 
   shaders:
     - shaders/ink_sparkle.frag
