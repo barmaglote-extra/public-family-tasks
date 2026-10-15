@@ -66,6 +66,44 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
     }
   }
 
+  Future<void> _exportBackup() async {
+    final ok = await _backupService.exportBackup();
+    if (!mounted) return;
+
+    if (!ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Export failed'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _importBackup() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Restore from file?'),
+        content: const Text('All current data will be replaced by the data from the backup file.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Restore')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final ok = await _backupService.importBackup();
+    if (!mounted || ok == null) return;
+
+    await _loadBackupInfo();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(ok ? 'Backup restored' : 'Restore failed'),
+        backgroundColor: ok ? Colors.green : Colors.red,
+      ),
+    );
+  }
+
   Future<void> _createBackup() async {
     final localizationService = Provider.of<LocalizationService>(context, listen: false);
 
@@ -718,6 +756,28 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
                                               (_hasBackup && _isBackupValid == true) ? Colors.orange : Colors.grey,
                                           foregroundColor: Colors.white,
                                         ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton.icon(
+                                        onPressed: _isLoading ? null : _exportBackup,
+                                        icon: const Icon(Icons.ios_share),
+                                        label: const Text('Export to file'),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: OutlinedButton.icon(
+                                        onPressed: _isLoading ? null : _importBackup,
+                                        icon: const Icon(Icons.file_open),
+                                        label: const Text('Import from file'),
                                       ),
                                     ),
                                   ],

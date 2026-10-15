@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tasks/main.dart';
 import 'package:tasks/repository/sqllitedb.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:file_picker/file_picker.dart';
 
 /// Service for handling database backup and restore operations
 class BackupService {
@@ -41,6 +43,62 @@ class BackupService {
     } catch (e) {
       if (kDebugMode) {
         print('Backup failed: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Export a copy of the database via the system share sheet
+  /// so it can be saved outside the app (Drive, Telegram, Downloads...)
+  Future<bool> exportBackup() async {
+    try {
+      final dbPath = await _sqliteDb.getDatabasePath();
+      final dbFile = File(dbPath);
+
+      if (!await dbFile.exists()) {
+        throw Exception('Database file not found');
+      }
+
+      // Copy to a temp file with a readable name, so the live DB is not shared directly
+      final tempDir = await getTemporaryDirectory();
+      final stamp = DateTime.now().toIso8601String().substring(0, 10);
+      final exportPath = join(tempDir.path, 'tasks_backup_$stamp.db');
+      await dbFile.copy(exportPath);
+
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(exportPath)],
+          subject: 'Family Tasks backup',
+        ),
+      );
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Export failed: $e');
+      }
+      return false;
+    }
+  }
+
+  /// Let the user pick a backup file and restore the database from it
+  /// Returns null if the user cancelled, true/false for success/failure
+  Future<bool?> importBackup() async {
+    try {
+      final result = await FilePicker.pickFiles(type: FileType.any);
+      final pickedPath = result?.files.single.path;
+      if (pickedPath == null) return null;
+
+      // Put the picked file in place of the internal backup,
+      // then reuse the existing validation + restore + rollback logic
+      final appDir = await getApplicationDocumentsDirectory();
+      final backupPath = join(appDir.path, _backupFileName);
+      await File(pickedPath).copy(backupPath);
+
+      return await restoreFromBackup();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Import failed: $e');
       }
       return false;
     }
