@@ -38,14 +38,14 @@ jobs:
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./android/app/key.properties
           echo "storeFile=${{ github.workspace }}/android/app/familytasks-key.jks" >> ./android/app/key.properties
 
+      - name: Build release APK
+        run: flutter build apk --release --no-shrink
+
       - name: Verify signing config
         run: |
           cd android
           chmod +x ./gradlew
           ./gradlew signingReport
-
-      - name: Build release APK
-        run: flutter build apk --release --no-shrink
 
       - name: Build release AAB
         run: flutter build appbundle --release --no-shrink
