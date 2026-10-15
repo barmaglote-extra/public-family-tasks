@@ -41,7 +41,7 @@ jobs:
           echo "storeFile=${{ github.workspace }}/android/app/familytasks-key.jks" >> ./android/app/key.properties
 
       - name: Build release APK
-        run: flutter build apk --release --no-shrink
+        run: flutter build apk --release --no-shrink --build-number=${{ github.run_number }}
 
       - name: Verify signing config
         run: |
@@ -50,7 +50,7 @@ jobs:
           ./gradlew signingReport
 
       - name: Build release AAB
-        run: flutter build appbundle --release --no-shrink
+        run: flutter build appbundle --release --no-shrink --build-number=${{ github.run_number }}
 
       - name: Verify AAB release signing
         run: |
