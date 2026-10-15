@@ -42,6 +42,9 @@ dependencies:
   app_badge_plus: ^1.0.0
   badges: ^3.0.3
   share_plus: ^12.0.2
+  http: ^1.6.0
+  speech_to_text: ^7.4.0
+  flutter_secure_storage: ^9.2.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

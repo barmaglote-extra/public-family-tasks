@@ -15,6 +15,9 @@ import 'package:tasks/widgets/task_description_field.dart';
 import 'package:tasks/widgets/task_name_field.dart';
 import 'package:tasks/widgets/task_type_dropdown.dart';
 import 'package:tasks/widgets/urgency_dropdown.dart';
+import 'package:tasks/services/ai_service.dart';
+import 'package:tasks/services/ai_settings_service.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../widgets/collection_dropdown.dart';
 
@@ -58,6 +61,12 @@ class _NewTasksPageState extends State<NewTaskPage> {
 
   List<Map<String, dynamic>> subTasks = [];
   bool _isImportedTask = false; // Flag to track if this is imported
+
+  // AI
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+  String _heardText = '';
+  bool _aiBusy = false;
 
   void _addTask() async {
     if (taskType == 'recurrent' && (repeatPeriod == null || repeatPeriod == '')) {
@@ -174,6 +183,120 @@ class _NewTasksPageState extends State<NewTaskPage> {
       final item = subTasks.removeAt(oldIndex);
       subTasks.insert(newIndex, item);
     });
+  }
+
+  Future<void> _toggleListening() async {
+    if (_isListening) {
+      await _speech.stop();
+      setState(() => _isListening = false);
+      return;
+    }
+
+    final available = await _speech.initialize(
+      onError: (e) {
+        if (!mounted) return;
+        setState(() => _isListening = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Speech error: ${e.errorMsg}'), backgroundColor: Colors.red),
+        );
+      },
+      onStatus: (status) {
+        if (!mounted) return;
+        if (status == 'done' || status == 'notListening') {
+          setState(() => _isListening = false);
+        }
+      },
+    );
+
+    if (!available) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Speech recognition is not available')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isListening = true;
+      _heardText = '';
+    });
+
+    await _speech.listen(
+      onResult: (result) {
+        if (!mounted) return;
+        setState(() {
+          _heardText = result.recognizedWords;
+          _descriptionController.text = result.recognizedWords;
+        });
+      },
+    );
+  }
+
+  Future<void> _aiFillTask() async {
+    if (!await AiSettingsService().isConfigured()) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Configure AI in Settings first')),
+      );
+      return;
+    }
+    if (!mounted) return;
+
+    final inputController = TextEditingController(text: _heardText);
+    final note = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Describe the task'),
+        content: TextField(
+          controller: inputController,
+          autofocus: true,
+          minLines: 2,
+          maxLines: 6,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, inputController.text),
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+    if (note == null || note.trim().isEmpty) return;
+
+    setState(() => _aiBusy = true);
+    try {
+      final result = await AiService().parseTask(note.trim());
+      if (!mounted) return;
+
+      setState(() {
+        _textController.text = result['title'] as String;
+        _descriptionController.text = result['description'] as String;
+
+        // The AI result is a regular task, so reset the type and replace subtasks
+        taskType = 'regular';
+        repeatPeriod = null;
+        for (var st in subTasks) {
+          (st['name'] as TextEditingController?)?.dispose();
+          (st['dueDate'] as TextEditingController?)?.dispose();
+        }
+        subTasks = (result['subtasks'] as List<String>).map((name) {
+          return {
+            'uid': UniqueKey().toString(),
+            'name': TextEditingController(text: name),
+            'dueDate': TextEditingController(),
+          };
+        }).toList();
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('AI error: $e'), backgroundColor: Colors.red),
+      );
+    } finally {
+      if (mounted) setState(() => _aiBusy = false);
+    }
   }
 
   @override
@@ -314,6 +437,7 @@ class _NewTasksPageState extends State<NewTaskPage> {
       (subTask['name'] as TextEditingController?)?.dispose();
       (subTask['dueDate'] as TextEditingController?)?.dispose();
     }
+    _speech.cancel();
     super.dispose();
   }
 
@@ -341,6 +465,15 @@ class _NewTasksPageState extends State<NewTaskPage> {
             icon: const Icon(Icons.save),
             disabledColor: Colors.black38,
             onPressed: _addTask,
+          ),
+          IconButton(
+            icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+            color: _isListening ? Colors.red : null,
+            onPressed: _toggleListening,
+          ),
+          IconButton(
+            icon: const Icon(Icons.auto_awesome),
+            onPressed: _aiBusy ? null : _aiFillTask,
           ),
         ],
       ),

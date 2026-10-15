@@ -8,6 +8,7 @@ import 'package:tasks/services/backup_service.dart';
 import 'package:tasks/services/database_migration_service.dart';
 import 'package:tasks/services/localization_service.dart';
 import 'package:intl/intl.dart';
+import 'package:tasks/services/ai_settings_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -28,11 +29,33 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
   bool _hasOldDatabase = false;
   Map<String, dynamic>? _oldDatabaseInfo;
 
+  //AI
+  final _aiSettingsService = AiSettingsService();
+
+  final _aiEndpointController = TextEditingController();
+  final _aiModelController = TextEditingController();
+  final _aiApiKeyController = TextEditingController();
+
+  bool _aiSettingsLoaded = false;
+  bool _aiSaving = false;
+  bool _aiKeyConfigured = false;
+  bool _clearAiKey = false;
+  bool _obscureAiKey = true;
+
   @override
   void initState() {
     super.initState();
     _loadBackupInfo();
     _checkForOldDatabase();
+    _loadAiSettings();
+  }
+
+  @override
+  void dispose() {
+    _aiEndpointController.dispose();
+    _aiModelController.dispose();
+    _aiApiKeyController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadBackupInfo() async {
@@ -63,6 +86,99 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
       }
     } finally {
       setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _loadAiSettings() async {
+    try {
+      final settings = await _aiSettingsService.load();
+
+      if (!mounted) return;
+
+      setState(() {
+        _aiEndpointController.text = settings['endpoint'] ?? '';
+        _aiModelController.text = settings['model'] ?? '';
+        _aiKeyConfigured = (settings['apiKey'] ?? '').isNotEmpty;
+        _aiSettingsLoaded = true;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() => _aiSettingsLoaded = true);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load AI settings: $e')),
+      );
+    }
+  }
+
+  Future<void> _saveAiSettings() async {
+    final endpoint = _aiEndpointController.text.trim();
+    final model = _aiModelController.text.trim();
+    final newApiKey = _aiApiKeyController.text.trim();
+
+    final uri = Uri.tryParse(endpoint);
+
+    if (uri == null ||
+        !['https', 'http'].contains(uri.scheme) ||
+        uri.host.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Enter a valid API URL, including https://'),
+        ),
+      );
+      return;
+    }
+
+    if (model.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter a model name')),
+      );
+      return;
+    }
+
+    if (!_aiKeyConfigured && newApiKey.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter an API key')),
+      );
+      return;
+    }
+
+    setState(() => _aiSaving = true);
+
+    try {
+      await _aiSettingsService.save(
+        endpoint: endpoint,
+        model: model,
+        apiKey: newApiKey.isEmpty ? null : newApiKey,
+        clearApiKey: _clearAiKey,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _aiKeyConfigured = !_clearAiKey &&
+            (newApiKey.isNotEmpty || _aiKeyConfigured);
+        _clearAiKey = false;
+        _aiApiKeyController.clear();
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('AI settings saved'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save AI settings: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _aiSaving = false);
+      }
     }
   }
 
@@ -475,6 +591,131 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.auto_awesome, size: 24),
+                                SizedBox(width: 8),
+                                Text(
+                                  'AI assistant',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Configure an API provider to create tasks from voice or text. '
+                              'You must supply your own API key.',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            const SizedBox(height: 16),
+
+                            TextField(
+                              controller: _aiEndpointController,
+                              keyboardType: TextInputType.url,
+                              decoration: const InputDecoration(
+                                labelText: 'API endpoint',
+                                hintText: 'https://your-provider.example/v1/chat/completions',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+
+                            TextField(
+                              controller: _aiModelController,
+                              decoration: const InputDecoration(
+                                labelText: 'Model',
+                                hintText: 'Model name supplied by your provider',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+
+                            TextField(
+                              controller: _aiApiKeyController,
+                              obscureText: _obscureAiKey,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              decoration: InputDecoration(
+                                labelText: 'API key',
+                                hintText: _aiKeyConfigured
+                                    ? 'Saved; leave blank to keep the current key'
+                                    : 'Enter your API key',
+                                border: const OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscureAiKey
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureAiKey = !_obscureAiKey;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            if (_aiKeyConfigured) ...[
+                              const SizedBox(height: 8),
+                              CheckboxListTile(
+                                contentPadding: EdgeInsets.zero,
+                                value: _clearAiKey,
+                                title: const Text('Delete saved API key'),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _clearAiKey = value ?? false;
+                                  });
+                                },
+                                controlAffinity: ListTileControlAffinity.leading,
+                              ),
+                            ],
+
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: (!_aiSettingsLoaded || _aiSaving)
+                                    ? null
+                                    : _saveAiSettings,
+                                icon: _aiSaving
+                                    ? const SizedBox(
+                                        width: 18,
+                                        height: 18,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Icon(Icons.save),
+                                label: Text(
+                                  _aiSaving ? 'Saving...' : 'Save AI settings',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _aiKeyConfigured
+                                  ? 'An API key is saved on this device.'
+                                  : 'API key is not configured.',
+                              style: TextStyle(
+                                color: _aiKeyConfigured ? Colors.green : Colors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
                     // Language Selection Section
                     Consumer<LocalizationService>(
                       builder: (context, localizationService, child) {
