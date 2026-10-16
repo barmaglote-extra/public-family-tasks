@@ -1,5 +1,6 @@
 import 'package:tasks/models/todo_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:tasks/widgets/localized_text.dart';
 
 class CollectionDropdown extends StatelessWidget {
   final List<ToDoCollection> collections;
@@ -28,7 +29,9 @@ class CollectionDropdown extends StatelessWidget {
         underline: const SizedBox.shrink(),
         isExpanded: true,
         hint: Text(
-          collections.isEmpty ? 'No collections available' : 'Select collection',
+          collections.isEmpty
+              ? context.tr('collections.no_collections_available')
+              : context.tr('collections.select_collection'),
           style: const TextStyle(color: Colors.black),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -40,9 +43,9 @@ class CollectionDropdown extends StatelessWidget {
                 );
               }).toList()
             : [
-                const DropdownMenuItem<ToDoCollection>(
+                DropdownMenuItem<ToDoCollection>(
                   value: null,
-                  child: Text('No collections'),
+                  child: Text(context.tr('collections.no_collections')),
                 ),
               ],
       ),

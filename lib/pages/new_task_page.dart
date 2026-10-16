@@ -21,6 +21,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:provider/provider.dart';
 import 'package:tasks/services/localization_service.dart';
 import 'package:tasks/services/speech_settings.dart';
+import 'package:tasks/widgets/localized_text.dart';
 
 import '../widgets/collection_dropdown.dart';
 
@@ -485,10 +486,10 @@ class _NewTasksPageState extends State<NewTaskPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
           _isImportedTask
-              ? "Import Task"
+              ? context.tr('new_task.import_task')
               : widget.collectionId != null
                   ? (collection?.name ?? "Loading...")
-                  : "New Task",
+                  : context.tr('tasks.new_task'),
           style: const TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -524,9 +525,9 @@ class _NewTasksPageState extends State<NewTaskPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (widget.collectionId == null || widget.collectionId == -1) ...[
-                const Text(
-                  "Collection",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                Text(
+                  context.tr('new_task.collection'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
                 ),
                 SizedBox(
                   width: 230,
@@ -545,7 +546,7 @@ class _NewTasksPageState extends State<NewTaskPage> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
                 Expanded(
                   child: Text(
-                    _isImportedTask ? 'Import Task' : 'New Task',
+                    _isImportedTask ? context.tr('new_task.import_task') : context.tr('tasks.new_task'),
                     style: Theme.of(context)
                         .textTheme
                         .headlineMedium
@@ -575,15 +576,13 @@ class _NewTasksPageState extends State<NewTaskPage> {
                 ),
               ]),
               const SizedBox(height: 20),
-              const Text("Title", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+              Text(context.tr('new_task.title'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
               TaskNameField(controller: _textController),
               const SizedBox(height: 20),
-              const Text("Description",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+              Text(context.tr('new_task.description'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
               TaskDescriptionField(controller: _descriptionController),
               const SizedBox(height: 20),
-              const Text("Importance",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+              Text(context.tr('new_task.importance'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
               UrgencyDropdown(
                 selectedUrgency: urgency,
                 onChanged: (newUrgency) {
@@ -594,15 +593,13 @@ class _NewTasksPageState extends State<NewTaskPage> {
               ),
               if (taskType == 'regular') ...[
                 const SizedBox(height: 20),
-                const Text("Due Date",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                Text(context.tr('tasks.due_date'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
                 DatePickerField(label: '', controller: _dueDateController),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Subtasks",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                    Text(context.tr('subtasks.subtasks'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: _addSubTask,
@@ -691,8 +688,7 @@ class _NewTasksPageState extends State<NewTaskPage> {
               ],
               if (taskType == 'recurrent') ...[
                 const SizedBox(height: 20),
-                const Text("Frequency",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
+                Text(context.tr('new_task.frequency'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey)),
                 RepeatPeriodDropdown(
                   selectedPeriod: repeatPeriod,
                   onChanged: (newPeriod) {

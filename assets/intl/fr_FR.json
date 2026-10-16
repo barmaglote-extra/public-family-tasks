@@ -33,6 +33,14 @@
     "new_template": "Nouveau Modèle",
     "edit_template": "Modifier le Modèle"
   },
+  "new_task": {
+    "import_task": "Importer la tâche",
+    "collection": "Collection",
+    "title": "Titre",
+    "description": "Description",
+    "importance": "Importance",
+    "frequency": "Fréquence"
+  },
   "tasks": {
     "task": "Tâche",
     "tasks": "Tâches",
@@ -116,7 +124,9 @@
     "collection_description": "Description de la Collection",
     "no_collections": "Aucune collection",
     "create_first_collection": "Créez votre première collection pour commencer",
-    "your_collections": "Vos Collections"
+    "your_collections": "Vos Collections",
+    "select_collection": "Sélectionner une collection",
+    "no_collections_available": "Aucune collection disponible"
   },
   "recurrence": {
     "daily": "Quotidiennement",
@@ -124,7 +134,8 @@
     "monthly": "Mensuellement",
     "yearly": "Annuellement",
     "recurrence_interval": "Intervalle de Récurrence",
-    "no_recurrence": "Pas de récurrence"
+    "no_recurrence": "Pas de récurrence",
+    "select_period": "Sélectionner la période de répétition"
   },
   "actions": {
     "save": "Enregistrer",
@@ -204,7 +215,8 @@
     "task_statistics_header": "Statistiques des Tâches",
     "due_date_overview": "Aperçu des Dates d'Échéance",
     "completion_trends": "Tendances d'Achèvement",
-    "recurring_tasks_header": "Tâches Récurrentes"
+    "recurring_tasks_header": "Tâches Récurrentes",
+    "incomplete": "Non terminées"
   },
   "notifications": {
     "notifications": "Notifications",

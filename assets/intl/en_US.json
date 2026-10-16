@@ -16,6 +16,14 @@
     "templates": "Templates",
     "website": "Official Website"
   },
+  "new_task": {
+    "import_task": "Import Task",
+    "collection": "Collection",
+    "title": "Title",
+    "description": "Description",
+    "importance": "Importance",
+    "frequency": "Frequency"
+  },
   "pages": {
     "home_page": "Home Page",
     "collections_page": "Collections",
@@ -116,7 +124,9 @@
     "collection_description": "Collection Description",
     "no_collections": "No collections",
     "create_first_collection": "Create your first collection to get started",
-    "your_collections": "Your Collections"
+    "your_collections": "Your Collections",
+    "select_collection": "Select collection",
+    "no_collections_available": "No collections available"
   },
   "recurrence": {
     "daily": "Daily",
@@ -124,7 +134,8 @@
     "monthly": "Monthly",
     "yearly": "Yearly",
     "recurrence_interval": "Recurrence Interval",
-    "no_recurrence": "No recurrence"
+    "no_recurrence": "No recurrence",
+    "select_period": "Select repeat period"
   },
   "actions": {
     "save": "Save",
@@ -204,7 +215,8 @@
     "task_statistics_header": "Task Statistics",
     "due_date_overview": "Due Date Overview",
     "completion_trends": "Completion Trends",
-    "recurring_tasks_header": "Recurring Tasks"
+    "recurring_tasks_header": "Recurring Tasks",
+    "incomplete": "Incomplete"
   },
   "notifications": {
     "notifications": "Notifications",

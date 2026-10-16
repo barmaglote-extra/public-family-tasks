@@ -33,6 +33,14 @@
     "new_template": "Новий шаблон",
     "edit_template": "Редагувати шаблон"
   },
+  "new_task": {
+    "import_task": "Імпорт завдання",
+    "collection": "Колекція",
+    "title": "Назва",
+    "description": "Опис",
+    "importance": "Важливість",
+    "frequency": "Частота"
+  },
   "tasks": {
     "task": "Завдання",
     "tasks": "Завдання",
@@ -116,7 +124,9 @@
     "collection_description": "Опис колекції",
     "no_collections": "Немає колекцій",
     "create_first_collection": "Створіть вашу першу колекцію для початку",
-    "your_collections": "Ваші колекції"
+    "your_collections": "Ваші колекції",
+    "select_collection": "Виберіть колекцію",
+    "no_collections_available": "Немає доступних колекцій"
   },
   "recurrence": {
     "daily": "Щодня",
@@ -124,7 +134,8 @@
     "monthly": "Щомісяця",
     "yearly": "Щороку",
     "recurrence_interval": "Інтервал повторення",
-    "no_recurrence": "Без повторення"
+    "no_recurrence": "Без повторення",
+    "select_period": "Виберіть період повторення"
   },
   "actions": {
     "save": "Зберегти",
@@ -204,7 +215,8 @@
     "task_statistics_header": "Статистика завдань",
     "due_date_overview": "Огляд термінів виконання",
     "completion_trends": "Тенденції виконання",
-    "recurring_tasks_header": "Повторювані завдання"
+    "recurring_tasks_header": "Повторювані завдання",
+    "incomplete": "Не виконано"
   },
   "notifications": {
     "notifications": "Сповіщення",

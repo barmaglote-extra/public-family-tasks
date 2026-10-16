@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/widgets/localized_text.dart';
 
 class RepeatPeriodDropdown extends StatelessWidget {
   final String? selectedPeriod;
@@ -22,19 +23,19 @@ class RepeatPeriodDropdown extends StatelessWidget {
         isExpanded: true,
         borderRadius: BorderRadius.circular(5),
         underline: const SizedBox.shrink(),
-        hint: const Text('Select repeat period', style: TextStyle(color: Colors.black)),
+        hint: Text(context.tr('recurrence.select_period'), style: const TextStyle(color: Colors.black)),
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         items: <String>['daily', 'weekly', 'monthly', 'yearly'].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(
               value == 'daily'
-                  ? 'Daily'
+                  ? context.tr('recurrence.daily')
                   : value == 'weekly'
-                      ? 'Weekly'
+                      ? context.tr('recurrence.weekly')
                       : value == 'monthly'
-                          ? 'Monthly'
-                          : 'Yearly',
+                          ? context.tr('recurrence.monthly')
+                          : context.tr('recurrence.yearly'),
             ),
           );
         }).toList(),

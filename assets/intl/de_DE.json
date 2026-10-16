@@ -33,6 +33,14 @@
     "new_template": "Neue Vorlage",
     "edit_template": "Vorlage bearbeiten"
   },
+  "new_task": {
+    "import_task": "Aufgabe importieren",
+    "collection": "Sammlung",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "importance": "Wichtigkeit",
+    "frequency": "Häufigkeit"
+  },
   "tasks": {
     "task": "Aufgabe",
     "tasks": "Aufgaben",
@@ -46,7 +54,7 @@
     "urgent": "Dringend",
     "normal": "Normal",
     "low": "Niedrig",
-    "extra_urgent": "Extra Niedrig",
+    "extra_urgent": "Extra dringend",
     "completed": "Abgeschlossen",
     "pending": "Ausstehend",
     "overdue": "Überfällig",
@@ -116,7 +124,9 @@
     "collection_description": "Sammlungsbeschreibung",
     "no_collections": "Keine Sammlungen",
     "create_first_collection": "Erstellen Sie Ihre erste Sammlung um zu beginnen",
-    "your_collections": "Ihre Sammlungen"
+    "your_collections": "Ihre Sammlungen",
+    "select_collection": "Sammlung auswählen",
+    "no_collections_available": "Keine Sammlungen verfügbar"
   },
   "recurrence": {
     "daily": "Täglich",
@@ -124,7 +134,8 @@
     "monthly": "Monatlich",
     "yearly": "Jährlich",
     "recurrence_interval": "Wiederholungsintervall",
-    "no_recurrence": "Keine Wiederholung"
+    "no_recurrence": "Keine Wiederholung",
+    "select_period": "Wiederholungszeitraum auswählen"
   },
   "actions": {
     "save": "Speichern",
@@ -204,7 +215,8 @@
     "task_statistics_header": "Aufgaben Statistiken",
     "due_date_overview": "Überblick über Fälligkeitsdaten",
     "completion_trends": "Abschlusstrends",
-    "recurring_tasks_header": "Wiederkehrende Aufgaben"
+    "recurring_tasks_header": "Wiederkehrende Aufgaben",
+    "incomplete": "Nicht abgeschlossen"
   },
   "notifications": {
     "notifications": "Benachrichtigungen",

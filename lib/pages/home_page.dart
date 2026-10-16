@@ -299,7 +299,7 @@ class _MyHomePageState extends State<MyHomePage> with NavigationMixin, TickerPro
                 children: [
                   Expanded(
                     child: _buildStatCard(
-                      title: 'Completed',
+                      title: context.tr('tasks.completed'),
                       count: _totalCompleted,
                       color: Colors.green,
                       icon: Icons.check_circle,
@@ -308,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> with NavigationMixin, TickerPro
                   const SizedBox(width: 8),
                   Expanded(
                     child: _buildStatCard(
-                      title: 'Incomplete',
+                      title: context.tr('stats.incomplete'),
                       count: stats['incomplete']!,
                       color: Colors.red,
                       icon: Icons.warning,

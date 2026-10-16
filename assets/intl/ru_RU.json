@@ -33,6 +33,14 @@
     "new_template": "Новый шаблон",
     "edit_template": "Редактировать шаблон"
   },
+  "new_task": {
+    "import_task": "Импорт задачи",
+    "collection": "Коллекция",
+    "title": "Название",
+    "description": "Описание",
+    "importance": "Важность",
+    "frequency": "Частота"
+  },
   "tasks": {
     "task": "Задача",
     "tasks": "Задачи",
@@ -116,7 +124,9 @@
     "collection_description": "Описание коллекции",
     "no_collections": "Нет коллекций",
     "create_first_collection": "Создайте вашу первую коллекцию для начала",
-    "your_collections": "Ваши коллекции"
+    "your_collections": "Ваши коллекции",
+    "select_collection": "Выберите коллекцию",
+    "no_collections_available": "Нет доступных коллекций"
   },
   "recurrence": {
     "daily": "Ежедневно",
@@ -124,7 +134,8 @@
     "monthly": "Ежемесячно",
     "yearly": "Ежегодно",
     "recurrence_interval": "Интервал повторения",
-    "no_recurrence": "Без повторения"
+    "no_recurrence": "Без повторения",
+    "select_period": "Выберите период повторения"
   },
   "actions": {
     "save": "Сохранить",
@@ -204,7 +215,8 @@
     "task_statistics_header": "Статистика задач",
     "due_date_overview": "Обзор сроков выполнения",
     "completion_trends": "Тенденции выполнения",
-    "recurring_tasks_header": "Повторяющиеся задачи"
+    "recurring_tasks_header": "Повторяющиеся задачи",
+    "incomplete": "Не выполнено"
   },
   "notifications": {
     "notifications": "Уведомления",
