@@ -9,6 +9,7 @@ import 'package:tasks/services/database_migration_service.dart';
 import 'package:tasks/services/localization_service.dart';
 import 'package:intl/intl.dart';
 import 'package:tasks/services/ai_settings_service.dart';
+import 'package:tasks/services/speech_settings.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -31,7 +32,6 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
 
   //AI
   final _aiSettingsService = AiSettingsService();
-
   final _aiEndpointController = TextEditingController();
   final _aiModelController = TextEditingController();
   final _aiApiKeyController = TextEditingController();
@@ -41,6 +41,7 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
   bool _aiKeyConfigured = false;
   bool _clearAiKey = false;
   bool _obscureAiKey = true;
+  String _speechLang = 'app';
 
   @override
   void initState() {
@@ -48,6 +49,7 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
     _loadBackupInfo();
     _checkForOldDatabase();
     _loadAiSettings();
+    _loadSpeechLang();
   }
 
   @override
@@ -56,6 +58,12 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
     _aiModelController.dispose();
     _aiApiKeyController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSpeechLang() async {
+    final value = await SpeechSettings.load();
+    if (!mounted) return;
+    setState(() => _speechLang = value);
   }
 
   Future<void> _loadBackupInfo() async {
@@ -710,6 +718,43 @@ class _SettingsPageState extends State<SettingsPage> with BackButtonMixin {
                                 color: _aiKeyConfigured ? Colors.green : Colors.orange,
                               ),
                             ),
+
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Voice input language',
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: _speechLang,
+                                  isExpanded: true,
+                                  items: const [
+                                    DropdownMenuItem(value: 'app', child: Text('Same as app language')),
+                                    DropdownMenuItem(value: 'system', child: Text('Phone system language')),
+                                    DropdownMenuItem(value: 'ru', child: Text('Русский')),
+                                    DropdownMenuItem(value: 'en', child: Text('English')),
+                                    DropdownMenuItem(value: 'de', child: Text('Deutsch')),
+                                    DropdownMenuItem(value: 'uk', child: Text('Українська')),
+                                    DropdownMenuItem(value: 'es', child: Text('Español')),
+                                    DropdownMenuItem(value: 'fr', child: Text('Français')),
+                                  ],
+                                  onChanged: (value) async {
+                                    if (value == null) return;
+                                    setState(() => _speechLang = value);
+                                    await SpeechSettings.save(value);
+                                  },
+                                ),
+                              ),
+                            ),
+
                           ],
                         ),
                       ),

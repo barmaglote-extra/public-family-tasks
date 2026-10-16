@@ -54,6 +54,16 @@ class _CollectionsPageState extends State<CollectionsPage> with NavigationMixin,
     });
   }
 
+  Future<void> _openCollection(int collectionId) async {
+    await Navigator.pushNamed(
+      context,
+      'tasks',
+      arguments: {'collectionId': collectionId},
+    );
+    if (!mounted) return;
+    _loadData();
+  }
+
   Future<void> _saveGridModePreference(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_gridModeKey, value);
@@ -186,11 +196,7 @@ class _CollectionsPageState extends State<CollectionsPage> with NavigationMixin,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  'tasks',
-                  arguments: {'collectionId': collection.id},
-                ),
+                onTap: () =>  _openCollection(collection.id),
                 child: Row(
                   children: [
                     Container(
@@ -451,11 +457,7 @@ class _CollectionsPageState extends State<CollectionsPage> with NavigationMixin,
                     ),
                   ],
                 ),
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  'tasks',
-                  arguments: {'collectionId': collection.id},
-                ),
+                onTap: () => _openCollection(collection.id),
               ),
             ),
           ),

@@ -20,6 +20,7 @@ import 'package:tasks/services/ai_settings_service.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:provider/provider.dart';
 import 'package:tasks/services/localization_service.dart';
+import 'package:tasks/services/speech_settings.dart';
 
 import '../widgets/collection_dropdown.dart';
 
@@ -189,15 +190,23 @@ class _NewTasksPageState extends State<NewTaskPage> {
 
   Future<String?> _speechLocaleId() async {
     final appLocale = Provider.of<LocalizationService>(context, listen: false).currentLocale;
+    final choice = await SpeechSettings.load();
+
+    if (choice == 'system') {
+      return (await _speech.systemLocale())?.localeId;
+    }
+
+    final lang = choice == 'app' ? appLocale.languageCode.toLowerCase() : choice;
+    final country = choice == 'app' ? (appLocale.countryCode ?? '').toLowerCase() : '';
+
     final locales = await _speech.locales();
-
     String norm(String s) => s.toLowerCase().replaceAll('-', '_');
-    final lang = appLocale.languageCode.toLowerCase();
-    final exact = '${lang}_${(appLocale.countryCode ?? '').toLowerCase()}';
 
-    // 1) exact match (ru_RU), 2) any locale of the same language (ru_*)
-    for (final l in locales) {
-      if (norm(l.localeId) == exact) return l.localeId;
+    // 1) exact match (ru_ru), 2) any locale of the same language (ru_*)
+    if (country.isNotEmpty) {
+      for (final l in locales) {
+        if (norm(l.localeId) == '${lang}_$country') return l.localeId;
+      }
     }
     for (final l in locales) {
       if (norm(l.localeId).startsWith('${lang}_')) return l.localeId;
